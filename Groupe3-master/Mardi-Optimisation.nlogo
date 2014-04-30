@@ -8,9 +8,7 @@ turtles-own [
   happy?       ;; for each turtle, indicates whether at least %-similar-wanted percent of
                ;; that turtles' neighbors are the same color as the turtle
   similar-nearby   ;; how many neighboring patches have a turtle with my color?
-  green-nearby ;; how many have a turtle of another color?
-  yellow-nearby
-  white-nearby
+  other-nearby ;; how many have a turtle of another color?
   total-nearby  ;; sum of previous two variables
 ]
 
@@ -24,11 +22,6 @@ to setup
   ask n-of number-resident patches
     [ sprout 1
       [ set color red ] ]
-    
-    ask n-of number-villa patches
-  [sprout 1
-  [set color orange] ]
-  
   ask n-of number-bureau patches
   [sprout 1
   [set color green] ]
@@ -37,10 +30,6 @@ to setup
   [sprout 1
   [set color yellow] ]
 
-  ask n-of number-industrie patches
-  [sprout 1
-  [set color white] ]
-  
   ask turtles [ set shape "square"]
   update-variables
   reset-ticks
@@ -77,53 +66,11 @@ to update-turtles
     ;; surrounding the current patch
     set similar-nearby count (turtles in-radius radius)
       with [color = [color] of myself]
-    set green-nearby count (turtles in-radius radius)
-      with [color = green]
-      set yellow-nearby count (turtles in-radius radius)
-      with [color = yellow]
-      set white-nearby count (turtles in-radius radius)
-      with [color = white]
-    set total-nearby green-nearby + yellow-nearby + similar-nearby
-    set happy? yellow-nearby >= (yellow-commerce-wanted ) and green-nearby >= (green-bureau-wanted ) and white-nearby <= (white-industrie-wanted)
+    set other-nearby count (turtles in-radius radius)
+      with [color != [color] of myself]
+    set total-nearby other-nearby + similar-nearby
+    set happy? other-nearby >= (yellow-wanted * total-nearby / 100 ) and other-nearby >= (green-wanted * total-nearby / 100 )
   ]
-    
-     ask turtles with [color = orange] [
-    ;; in next two lines, we use "neighbors" to test the eight patches
-    ;; surrounding the current patch
-    set similar-nearby count (turtles in-radius radius)
-      with [color = [color] of myself]
-    set green-nearby count (turtles in-radius radius)
-      with [color = green]
-      set yellow-nearby count (turtles in-radius radius)
-      with [color = yellow]
-      set white-nearby count (turtles in-radius radius)
-      with [color = white]
-    set total-nearby green-nearby + yellow-nearby + similar-nearby
-    set happy? yellow-nearby >= (yellow-commerce-wanted * 2 ) and green-nearby >= (green-bureau-wanted * 2 ) and white-nearby <= (white-industrie-wanted * 2)
-  ]
-     
-     ask turtles with [color = white] [
-       
-       set similar-nearby count (turtles in-radius radius-industriel)
-      with [color = [color] of myself] 
-    set happy? similar-nearby >= (density-zone-industriel) 
-  ]
-          ask turtles with [color = green] [
-            
-            set similar-nearby count (turtles in-radius radius-bureau)
-      with [color = [color] of myself]  
-    set happy? similar-nearby >= (density-zone-bureau) 
-  ]
-       ask turtles with [color = yellow] [
-         
-         set similar-nearby count (turtles in-radius radius-commerce)
-      with [color = [color] of myself]   
-      
-      set white-nearby count (turtles in-radius radius-commerce)
-      with [color = white]
-    set happy? similar-nearby >= (density-zone-commerce) and white-nearby >= ( approvisionnement-commerce )
-  ]
-               
 end
 
 to update-globals
@@ -223,40 +170,40 @@ PENS
 "percent" 1.0 0 -10899396 true "" "plot percent-unhappy"
 
 SLIDER
-31
-48
-243
-81
+19
+22
+231
+55
 number-resident
 number-resident
 0
 1000
-200
+1000
 10
 1
 NIL
 HORIZONTAL
 
 SLIDER
-29
-147
-241
-180
-yellow-commerce-wanted
-yellow-commerce-wanted
+19
+95
+231
+128
+yellow-wanted
+yellow-wanted
 0
-10
-3
+100
+15
 1
 1
 NIL
 HORIZONTAL
 
 BUTTON
-32
-10
-112
-43
+48
+58
+128
+91
 setup
 setup
 NIL
@@ -270,10 +217,10 @@ NIL
 1
 
 BUTTON
-113
-10
-193
-43
+129
+58
+209
+91
 go
 go
 T
@@ -294,29 +241,29 @@ SLIDER
 number-bureau
 number-bureau
 0
-200
-0
-10
+1000
+102
+1
 1
 NIL
 HORIZONTAL
 
 INPUTBOX
-18
-236
-287
-296
+754
+105
+1023
+165
 radius
-5
+3
 1
 0
 Number
 
 BUTTON
-194
-10
-257
-43
+210
+58
+273
+91
 NIL
 go
 NIL
@@ -337,161 +284,23 @@ SLIDER
 number-commerce
 number-commerce
 0
-200
-100
-10
-1
-NIL
-HORIZONTAL
-
-SLIDER
-30
-114
-212
-147
-green-bureau-wanted
-green-bureau-wanted
-0
-10
-0
+1000
+101
 1
 1
 NIL
 HORIZONTAL
 
 SLIDER
-756
-251
-928
-284
-number-industrie
-number-industrie
+19
+133
+191
+166
+green-wanted
+green-wanted
 0
 100
-10
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-30
-180
-220
-213
-white-industrie-wanted
-white-industrie-wanted
-0
-10
-0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-32
-80
-204
-113
-number-villa
-number-villa
-0
-100
-0
-10
-1
-NIL
-HORIZONTAL
-
-SLIDER
-756
-284
-957
-317
-density-zone-industriel
-density-zone-industriel
-0
-10
-2
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-727
-78
-913
-111
-density-zone-bureau
-density-zone-bureau
-0
-10
-0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-914
-77
-1120
-110
-density-zone-commerce
-density-zone-commerce
-0
-10
-5
-1
-1
-NIL
-HORIZONTAL
-
-INPUTBOX
-740
-111
-895
-171
-radius-bureau
-3
-1
-0
-Number
-
-INPUTBOX
-935
-110
-1090
-170
-radius-commerce
-5
-1
-0
-Number
-
-INPUTBOX
-757
-317
-912
-377
-radius-industriel
-5
-1
-0
-Number
-
-SLIDER
-908
-171
-1152
-204
-approvisionnement-commerce
-approvisionnement-commerce
-0
-10
-1
+15
 1
 1
 NIL
