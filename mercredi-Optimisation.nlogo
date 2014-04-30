@@ -1,7 +1,7 @@
 globals [
   percent-similar  ;; on the average, what percent of a turtle's neighbors
                    ;; are the same color as that turtle?
-  percent-unhappy  ;; what percent of the turtles are unhappy?
+  percent-happy  ;; what percent of the turtles are unhappy?
 ]
 
 turtles-own [
@@ -11,6 +11,7 @@ turtles-own [
   green-nearby ;; how many have a turtle of another color?
   yellow-nearby
   white-nearby
+  red-nearby
   total-nearby  ;; sum of previous two variables
 ]
 
@@ -47,7 +48,7 @@ to setup
 end
 
 to go
-  if percent-unhappy = 0  [ stop ]
+  if percent-happy = 100  [ stop ]
   move-unhappy-turtles
   update-variables
   tick
@@ -84,7 +85,7 @@ to update-turtles
       set white-nearby count (turtles in-radius radius)
       with [color = white]
     set total-nearby green-nearby + yellow-nearby + similar-nearby
-    set happy? yellow-nearby >= (yellow-commerce-wanted ) and green-nearby >= (green-bureau-wanted ) and white-nearby <= (white-industrie-wanted)
+    set happy? yellow-nearby >= (yellow-commerce-wanted ) and green-nearby >= (green-bureau-wanted ) ;;and white-nearby <= (white-industrie-wanted)
   ]
     
      ask turtles with [color = orange] [
@@ -106,14 +107,22 @@ to update-turtles
        
        set similar-nearby count (turtles in-radius radius-industriel)
       with [color = [color] of myself] 
-    set happy? similar-nearby >= (density-zone-industriel) 
+      
+      set red-nearby count (turtles in-radius radius-industriel)
+      with [color = red]
+      
+    set happy? similar-nearby >= (density-zone-industriel) and red-resident-wanted >= ( red-nearby )
   ]
+     
+     
           ask turtles with [color = green] [
             
             set similar-nearby count (turtles in-radius radius-bureau)
       with [color = [color] of myself]  
     set happy? similar-nearby >= (density-zone-bureau) 
   ]
+      
+      
        ask turtles with [color = yellow] [
          
          set similar-nearby count (turtles in-radius radius-commerce)
@@ -121,7 +130,10 @@ to update-turtles
       
       set white-nearby count (turtles in-radius radius-commerce)
       with [color = white]
-    set happy? similar-nearby >= (density-zone-commerce) and white-nearby >= ( approvisionnement-commerce )
+      set red-nearby count (turtles in-radius radius-commerce)
+      with [color = red]
+      
+    set happy? similar-nearby >= (density-zone-commerce) and white-nearby >= ( approvisionnement-commerce ) and red-nearby >= ( red-resident-desired ) 
   ]
                
 end
@@ -130,7 +142,7 @@ to update-globals
   let similar-neighbors sum [similar-nearby] of turtles
   let total-neighbors sum [total-nearby] of turtles
   set percent-similar (similar-neighbors / total-neighbors) * 100
-  set percent-unhappy (count turtles with [happy? = FALSE]) / (count turtles) * 100
+  set percent-happy (count turtles with [happy? = TRUE]) / (count turtles) * 100
 end
 
 
@@ -169,8 +181,8 @@ MONITOR
 491
 343
 536
-% unhappy
-percent-unhappy
+% happy
+percent-happy
 1
 1
 11
@@ -209,7 +221,7 @@ PLOT
 444
 250
 587
-Percent Unhappy
+Percent happy
 time
 %
 0.0
@@ -220,7 +232,7 @@ true
 false
 "" ""
 PENS
-"percent" 1.0 0 -10899396 true "" "plot percent-unhappy"
+"percent" 1.0 0 -10899396 true "" "plot percent-happy"
 
 SLIDER
 31
@@ -231,7 +243,7 @@ number-resident
 number-resident
 0
 1000
-200
+250
 10
 1
 NIL
@@ -307,7 +319,7 @@ INPUTBOX
 287
 296
 radius
-5
+3
 1
 0
 Number
@@ -368,7 +380,7 @@ number-industrie
 number-industrie
 0
 100
-10
+24
 1
 1
 NIL
@@ -443,7 +455,7 @@ density-zone-commerce
 density-zone-commerce
 0
 10
-5
+3
 1
 1
 NIL
@@ -466,7 +478,7 @@ INPUTBOX
 1090
 170
 radius-commerce
-5
+3
 1
 0
 Number
@@ -491,7 +503,37 @@ approvisionnement-commerce
 approvisionnement-commerce
 0
 10
+0
 1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+757
+378
+939
+411
+red-resident-wanted
+red-resident-wanted
+0
+10
+0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+933
+205
+1118
+238
+red-resident-desired
+red-resident-desired
+0
+10
+3
 1
 1
 NIL
