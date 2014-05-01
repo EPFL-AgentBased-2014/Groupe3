@@ -1,7 +1,6 @@
 globals [
-  percent-similar  ;; on the average, what percent of a turtle's neighbors
-                   ;; are the same color as that turtle?
-  percent-happy  ;; what percent of the turtles are unhappy?
+  percent-happy  ;; 
+  percent-density
 ]
 
 turtles-own [
@@ -13,24 +12,25 @@ turtles-own [
   white-nearby
   red-nearby
   total-nearby  ;; sum of previous two variables
+  number-neighbors
 ]
 
 to setup
   clear-all
-  if number-resident > count patches
+  if number-red-resident > count patches
     [ user-message (word "This pond only has room for " count patches " turtles.")
       stop ]
    
   ;; create turtles on random patches.
-  ask n-of number-resident patches
+  ask n-of number-red-resident patches
     [ sprout 1
       [ set color red ] ]
   
-   ask n-of number-activity patches
+   ask n-of number-yellow-activity patches
   [sprout 1
   [set color yellow] ]
 
-  ask n-of number-industrie patches
+  ask n-of number-white-industry patches
   [sprout 1
   [set color white] ]
   
@@ -43,8 +43,10 @@ to go
   if percent-happy = 100  [ stop ]
   move-unhappy-turtles
   update-variables
+  density
   tick
 end
+
 
 to move-unhappy-turtles
   ask turtles with [happy? = FALSE]
@@ -68,25 +70,25 @@ to update-turtles
   ask turtles with [color = red] [
     ;; in next two lines, we use "neighbors" to test the eight patches
     ;; surrounding the current patch
-    set similar-nearby count (turtles in-radius radius)
+    set similar-nearby count (turtles in-radius radius-resident)
       with [color = [color] of myself]
-      set yellow-nearby count (turtles in-radius radius)
+      set yellow-nearby count (turtles in-radius radius-resident)
       with [color = yellow]
-      set white-nearby count (turtles in-radius radius)
+      set white-nearby count (turtles in-radius radius-resident)
       with [color = white]
     set total-nearby   yellow-nearby + similar-nearby + white-nearby
-    set happy? yellow-nearby >= (yellow-activity-wanted )  and white-nearby <= (white-industrie-wanted)
+    set happy? yellow-nearby >= (resident-wants-activity )  and white-nearby <= (resident-accepts-industry)
   ]
         
      ask turtles with [color = white] [
        
-       set similar-nearby count (turtles in-radius radius-industriel)
+       set similar-nearby count (turtles in-radius radius-industry)
       with [color = [color] of myself] 
       
-      set red-nearby count (turtles in-radius radius-industriel)
+      set red-nearby count (turtles in-radius radius-industry)
       with [color = red]
       
-    set happy? similar-nearby >= (density-zone-industriel) and red-resident-wanted >= ( red-nearby )
+    set happy? similar-nearby >= (industry-wants-industry) and industry-accepts-resident >= ( red-nearby )
   ]
           
        ask turtles with [color = yellow] [
@@ -99,26 +101,33 @@ to update-turtles
       set red-nearby count (turtles in-radius radius-activity)
       with [color = red]
       
-    set happy? white-nearby >= ( approvisionnement-activity ) and red-nearby >= ( red-resident-desired ) 
+    set happy? white-nearby >= ( activity-needs-industry ) and red-nearby >= ( activity-wants-resident ) 
   ]
                
 end
 
+to density
+  let tot 0
+  ask turtles [
+  set number-neighbors count turtles-on neighbors / 8 ]
+  set tot sum   [number-neighbors] of turtles
+  let moy-density tot / (count turtles)
+  set percent-density moy-density * 100
+end
+
+
 to update-globals
-  let similar-neighbors sum [similar-nearby] of turtles
-  let total-neighbors sum [total-nearby] of turtles
-  set percent-similar (similar-neighbors / total-neighbors) * 100
   set percent-happy (count turtles with [happy? = TRUE]) / (count turtles) * 100
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
 354
 10
-894
-571
+975
+652
 25
 25
-10.4
+11.9804
 1
 10
 1
@@ -139,10 +148,10 @@ ticks
 30.0
 
 MONITOR
-267
-491
-343
-536
+1258
+533
+1334
+578
 % happy
 percent-happy
 1
@@ -150,22 +159,22 @@ percent-happy
 11
 
 MONITOR
-268
-359
-343
-404
-% similar
-percent-similar
+1261
+361
+1338
+406
+% density
+percent-density
 1
 1
 11
 
 PLOT
-1
-299
-250
-442
-Percent Similar
+997
+326
+1246
+469
+Percent-density
 time
 %
 0.0
@@ -176,13 +185,13 @@ true
 false
 "" ""
 PENS
-"percent" 1.0 0 -2674135 true "" "plot percent-similar"
+"percent" 1.0 0 -16777216 true "" "plot percent-density"
 
 PLOT
-1
-444
-250
-587
+998
+493
+1247
+636
 Percent happy
 time
 %
@@ -197,219 +206,219 @@ PENS
 "percent" 1.0 0 -10899396 true "" "plot percent-happy"
 
 SLIDER
-31
-48
-243
-81
-number-resident
-number-resident
+25
+109
+250
+142
+number-red-resident
+number-red-resident
 0
 1000
-200
+500
 10
+1
+NIL
+HORIZONTAL
+
+SLIDER
+25
+139
+250
+172
+resident-wants-activity
+resident-wants-activity
+0
+10
+3
+1
+1
+NIL
+HORIZONTAL
+
+BUTTON
+25
+43
+105
+76
+setup
+setup
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+106
+43
+186
+76
+go
+go
+T
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+INPUTBOX
+253
+110
+343
+170
+radius-resident
+4
+1
+0
+Number
+
+BUTTON
+187
+43
+250
+76
+NIL
+go
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+SLIDER
+30
+259
+243
+292
+number-yellow-activity
+number-yellow-activity
+0
+200
+50
+10
+1
+NIL
+HORIZONTAL
+
+SLIDER
+30
+405
+247
+438
+number-white-industry
+number-white-industry
+0
+100
+10
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+26
+172
+251
+205
+resident-accepts-industry
+resident-accepts-industry
+0
+10
+0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+30
+438
+247
+471
+industry-wants-industry
+industry-wants-industry
+0
+10
+2
+1
+1
+NIL
+HORIZONTAL
+
+INPUTBOX
+246
+260
+343
+320
+radius-activity
+4
+1
+0
+Number
+
+INPUTBOX
+251
+406
+345
+466
+radius-industry
+3
+1
+0
+Number
+
+SLIDER
+30
+292
+243
+325
+activity-needs-industry
+activity-needs-industry
+0
+10
+0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+29
+472
+248
+505
+industry-accepts-resident
+industry-accepts-resident
+0
+10
+0
+1
 1
 NIL
 HORIZONTAL
 
 SLIDER
 31
-78
+324
 243
-111
-yellow-activity-wanted
-yellow-activity-wanted
+357
+activity-wants-resident
+activity-wants-resident
 0
 10
 3
-1
-1
-NIL
-HORIZONTAL
-
-BUTTON
-32
-10
-112
-43
-setup
-setup
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-113
-10
-193
-43
-go
-go
-T
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-INPUTBOX
-261
-52
-312
-112
-radius
-3
-1
-0
-Number
-
-BUTTON
-194
-10
-257
-43
-NIL
-go
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-SLIDER
-910
-44
-1083
-77
-number-activity
-number-activity
-0
-200
-100
-10
-1
-NIL
-HORIZONTAL
-
-SLIDER
-914
-281
-1086
-314
-number-industrie
-number-industrie
-0
-100
-10
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-32
-111
-222
-144
-white-industrie-wanted
-white-industrie-wanted
-0
-10
-0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-914
-314
-1086
-347
-density-zone-industriel
-density-zone-industriel
-0
-10
-0
-1
-1
-NIL
-HORIZONTAL
-
-INPUTBOX
-942
-142
-1049
-202
-radius-activity
-3
-1
-0
-Number
-
-INPUTBOX
-945
-382
-1056
-442
-radius-industriel
-3
-1
-0
-Number
-
-SLIDER
-911
-79
-1127
-112
-approvisionnement-activity
-approvisionnement-activity
-0
-10
-0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-913
-348
-1088
-381
-red-resident-wanted
-red-resident-wanted
-0
-10
-0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-912
-111
-1087
-144
-red-resident-desired
-red-resident-desired
-0
-10
-4
 1
 1
 NIL
