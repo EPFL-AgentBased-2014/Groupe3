@@ -1,17 +1,20 @@
 globals [
   percent-similar  ;; on the average, what percent of a turtle's neighbors
                    ;; are the same color as that turtle?
-  percent-unhappy  ;; what percent of the turtles are unhappy?
+  percent-happy  ;; what percent of the turtles are unhappy?
+  moy-density
 ]
 
 turtles-own [
   happy?       ;; for each turtle, indicates whether at least %-similar-wanted percent of
                ;; that turtles' neighbors are the same color as the turtle
   similar-nearby   ;; how many neighboring patches have a turtle with my color?
-  green-nearby ;; how many have a turtle of another color?
+  ;; how many have a turtle of another color?
   yellow-nearby
   white-nearby
+  red-nearby
   total-nearby  ;; sum of previous two variables
+  number-neighbors
 ]
 
 to setup
@@ -24,15 +27,12 @@ to setup
   ask n-of number-resident patches
     [ sprout 1
       [ set color red ] ]
-  ask n-of number-bureau patches
-  [sprout 1
-  [set color green] ]
   
-   ask n-of number-commerce patches
+   ask n-of number-yellow-activity patches
   [sprout 1
   [set color yellow] ]
   
-   ask n-of number-industry patches
+   ask n-of number-white-industry patches
   [sprout 1
   [set color white] ]
   
@@ -42,10 +42,19 @@ to setup
 end
 
 to go
-  if percent-unhappy = 0  [ stop ]
+  if percent-happy = 100  [ stop ]
   move-unhappy-turtles
   update-variables
+  percent-density
   tick
+end
+
+to percent-density
+  let tot 0
+  ask turtles [
+  set number-neighbors count turtles-on neighbors / 8 ]
+  set tot sum   [number-neighbors] of turtles
+  set moy-density tot / (count turtles) * 100
 end
 
 to move-unhappy-turtles
@@ -70,24 +79,44 @@ to update-turtles
   ask turtles with [color = red] [
     ;; in next two lines, we use "neighbors" to test the eight patches
     ;; surrounding the current patch
-    set similar-nearby count (turtles in-radius radius)
+    set similar-nearby count (turtles in-radius radius-resident-activity )
       with [color = [color] of myself]
-    set green-nearby count (turtles in-radius radius)
-      with [color = green]
-      set yellow-nearby count (turtles in-radius radius)
+      set yellow-nearby count (turtles in-radius radius-resident-activity)
       with [color = yellow]
-      set white-nearby count (turtles in-radius radius)
+      set white-nearby count (turtles in-radius radius-industry-resident)
       with [color = white]
-    set total-nearby green-nearby + yellow-nearby + white-nearby + similar-nearby
-    set happy? yellow-nearby >= (yellow-wanted) and green-nearby >= (green-wanted) and white-nearby <= white-undesired
+    set total-nearby yellow-nearby + white-nearby + similar-nearby
+    set happy? yellow-nearby >= (yellow-activity-wanted)  and white-nearby <= white-industry-wanted
   ]
+  
+   ask turtles with [color = yellow] [
+    ;; in next two lines, we use "neighbors" to test the eight patches
+    ;; surrounding the current patch
+    set red-nearby count (turtles in-radius radius-resident-activity)
+      with [color = red]
+      set happy? red-nearby >= 3
+   ]
+   
+     ask turtles with [color = white] [
+    ;; in next two lines, we use "neighbors" to test the eight patches
+    ;; surrounding the current patch
+    set red-nearby count (turtles in-radius radius-industry-resident)
+      with [color = red ]
+      set happy? red-nearby <= 5
+      
+      
+      ;;density
+    
+   ]
 end
+
+
 
 to update-globals
   let similar-neighbors sum [similar-nearby] of turtles
   let total-neighbors sum [total-nearby] of turtles
   set percent-similar (similar-neighbors / total-neighbors) * 100
-  set percent-unhappy (count turtles with [happy? = FALSE]) / (count turtles) * 100
+  set percent-happy (count turtles with [happy? = TRUE]) / (count turtles) * 100
 end
 
 
@@ -126,8 +155,8 @@ MONITOR
 491
 343
 536
-% unhappy
-percent-unhappy
+% Happy
+percent-happy
 1
 1
 11
@@ -135,10 +164,10 @@ percent-unhappy
 MONITOR
 268
 359
-343
+345
 404
-% similar
-percent-similar
+% density
+moy-density
 1
 1
 11
@@ -148,7 +177,7 @@ PLOT
 299
 250
 442
-Percent Similar
+Percent Density
 time
 %
 0.0
@@ -159,14 +188,14 @@ true
 false
 "" ""
 PENS
-"percent" 1.0 0 -2674135 true "" "plot percent-similar"
+"percent" 1.0 0 -2674135 true "" "plot moy-density"
 
 PLOT
 1
 444
 250
 587
-Percent Unhappy
+Percent Happy
 time
 %
 0.0
@@ -177,43 +206,43 @@ true
 false
 "" ""
 PENS
-"percent" 1.0 0 -10899396 true "" "plot percent-unhappy"
+"percent" 1.0 0 -10899396 true "" "plot percent-happy"
 
 SLIDER
-19
-22
-231
-55
+9
+47
+242
+80
 number-resident
 number-resident
 0
 1000
-620
+230
 10
 1
 NIL
 HORIZONTAL
 
 SLIDER
-19
-95
-231
-128
-yellow-wanted
-yellow-wanted
+9
+177
+244
+210
+yellow-activity-wanted
+yellow-activity-wanted
 0
 10
-2
+0
 1
 1
 NIL
 HORIZONTAL
 
 BUTTON
-48
-58
-128
-91
+8
+10
+88
+43
 setup
 setup
 NIL
@@ -227,13 +256,41 @@ NIL
 1
 
 BUTTON
-129
-58
-209
-91
+95
+12
+175
+45
 go
 go
 T
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+INPUTBOX
+735
+14
+877
+74
+radius-resident-activity
+3
+1
+0
+Number
+
+BUTTON
+179
+12
+242
+45
+NIL
+go
+NIL
 1
 T
 OBSERVER
@@ -244,107 +301,60 @@ NIL
 1
 
 SLIDER
-739
-44
-911
-77
-number-bureau
-number-bureau
+9
+82
+242
+115
+number-yellow-activity
+number-yellow-activity
 0
 100
-80
+1
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+10
+117
+243
+150
+number-white-industry
+number-white-industry
+0
+100
+0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+9
+213
+243
+246
+white-industry-wanted
+white-industry-wanted
+0
+10
+0
 1
 1
 NIL
 HORIZONTAL
 
 INPUTBOX
-742
-136
-1011
-196
-radius
+735
+80
+879
+140
+radius-industry-resident
 5
 1
 0
 Number
-
-BUTTON
-210
-58
-273
-91
-NIL
-go
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-SLIDER
-910
-44
-1083
-77
-number-commerce
-number-commerce
-0
-100
-55
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-19
-133
-191
-166
-green-wanted
-green-wanted
-0
-10
-3
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-751
-87
-925
-120
-number-industry
-number-industry
-0
-100
-4
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-28
-176
-200
-209
-white-undesired
-white-undesired
-0
-10
-0
-1
-1
-NIL
-HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?

@@ -12,6 +12,7 @@ turtles-own [
   yellow-nearby
   white-nearby
   total-nearby  ;; sum of previous two variables
+  money
 ]
 
 to setup
@@ -23,12 +24,8 @@ to setup
   ;; create turtles on random patches.
   ask n-of number-resident patches
     [ sprout 1
-      [ set color red ] ]
-    
-    ask n-of number-villa patches
-  [sprout 1
-  [set color orange] ]
-  
+      [ set color red 
+        set money random 0 100] ]
   ask n-of number-bureau patches
   [sprout 1
   [set color green] ]
@@ -36,8 +33,8 @@ to setup
    ask n-of number-commerce patches
   [sprout 1
   [set color yellow] ]
-
-  ask n-of number-industrie patches
+  
+   ask n-of number-industry patches
   [sprout 1
   [set color white] ]
   
@@ -62,8 +59,19 @@ to find-new-spot
   rt random-float 360
   fd random-float 10
   if any? other turtles-here
-    [ find-new-spot ]          ;; keep going until we find an unoccupied patch
+    [ ifelse any? turtles-here with [money > [money] of myself] [
+        kick-out
+       ]
+      [find-new-spot]
+       ]          ;; keep going until we find an unoccupied patch
   move-to patch-here  ;; move to center of patch
+end
+
+to kick-out
+  ask turtles-here [
+    find-new-spot
+    ]
+  move-to patch-here
 end
 
 to update-variables
@@ -83,47 +91,32 @@ to update-turtles
       with [color = yellow]
       set white-nearby count (turtles in-radius radius)
       with [color = white]
-    set total-nearby green-nearby + yellow-nearby + similar-nearby
-    set happy? yellow-nearby >= (yellow-commerce-wanted ) and green-nearby >= (green-bureau-wanted ) and white-nearby <= (white-industrie-wanted)
+    set total-nearby green-nearby + yellow-nearby + white-nearby + similar-nearby
+    set happy? yellow-nearby >= (yellow-commerce-wanted) and green-nearby >= (green-bureau-wanted) and white-nearby <= white-industry-wanted
   ]
-    
-     ask turtles with [color = orange] [
+  
+   ask turtles with [color = yellow] [
     ;; in next two lines, we use "neighbors" to test the eight patches
     ;; surrounding the current patch
-    set similar-nearby count (turtles in-radius radius)
-      with [color = [color] of myself]
-    set green-nearby count (turtles in-radius radius)
-      with [color = green]
-      set yellow-nearby count (turtles in-radius radius)
-      with [color = yellow]
-      set white-nearby count (turtles in-radius radius)
+    set white-nearby count (turtles in-radius 5)
       with [color = white]
-    set total-nearby green-nearby + yellow-nearby + similar-nearby
-    set happy? yellow-nearby >= (yellow-commerce-wanted * 2 ) and green-nearby >= (green-bureau-wanted * 2 ) and white-nearby <= (white-industrie-wanted * 2)
-  ]
-     
+      set happy? white-nearby >= 1
+   ]
+   
+    ask turtles with [color = green] [
+    ;; in next two lines, we use "neighbors" to test the eight patches
+    ;; surrounding the current patch
+    set white-nearby count (turtles in-radius 3)
+      with [color = white]
+      set happy? white-nearby <= 0
+   ]
      ask turtles with [color = white] [
-       
-       set similar-nearby count (turtles in-radius radius-industriel)
-      with [color = [color] of myself] 
-    set happy? similar-nearby >= (density-zone-industriel) 
-  ]
-          ask turtles with [color = green] [
-            
-            set similar-nearby count (turtles in-radius radius-bureau)
-      with [color = [color] of myself]  
-    set happy? similar-nearby >= (density-zone-bureau) 
-  ]
-       ask turtles with [color = yellow] [
-         
-         set similar-nearby count (turtles in-radius radius-commerce)
-      with [color = [color] of myself]   
-      
-      set white-nearby count (turtles in-radius radius-commerce)
-      with [color = white]
-    set happy? similar-nearby >= (density-zone-commerce) and white-nearby >= ( approvisionnement-commerce )
-  ]
-               
+    ;; in next two lines, we use "neighbors" to test the eight patches
+    ;; surrounding the current patch
+    set similar-nearby count (turtles in-radius 3)
+      with [color = [color] of myself]
+      set happy? similar-nearby >= 3
+   ]
 end
 
 to update-globals
@@ -223,40 +216,40 @@ PENS
 "percent" 1.0 0 -10899396 true "" "plot percent-unhappy"
 
 SLIDER
-31
-48
-243
-81
+19
+22
+231
+55
 number-resident
 number-resident
 0
 1000
-200
+1000
 10
 1
 NIL
 HORIZONTAL
 
 SLIDER
-29
-147
-241
-180
+19
+95
+246
+128
 yellow-commerce-wanted
 yellow-commerce-wanted
 0
 10
-3
+0
 1
 1
 NIL
 HORIZONTAL
 
 BUTTON
-32
-10
-112
-43
+48
+58
+128
+91
 setup
 setup
 NIL
@@ -270,10 +263,10 @@ NIL
 1
 
 BUTTON
-113
-10
-193
-43
+129
+58
+209
+91
 go
 go
 T
@@ -294,29 +287,29 @@ SLIDER
 number-bureau
 number-bureau
 0
-200
-0
-10
+100
+53
+1
 1
 NIL
 HORIZONTAL
 
 INPUTBOX
-18
-236
-287
-296
+742
+136
+1011
+196
 radius
-5
+6
 1
 0
 Number
 
 BUTTON
-194
-10
-257
-43
+210
+58
+273
+91
 NIL
 go
 NIL
@@ -337,18 +330,18 @@ SLIDER
 number-commerce
 number-commerce
 0
-200
 100
-10
+69
+1
 1
 NIL
 HORIZONTAL
 
 SLIDER
-30
-114
-212
-147
+19
+133
+223
+166
 green-bureau-wanted
 green-bureau-wanted
 0
@@ -360,138 +353,30 @@ NIL
 HORIZONTAL
 
 SLIDER
-756
-251
-928
-284
-number-industrie
-number-industrie
+751
+87
+925
+120
+number-industry
+number-industry
 0
 100
-10
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-30
-180
-220
-213
-white-industrie-wanted
-white-industrie-wanted
-0
-10
-0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-32
-80
-204
-113
-number-villa
-number-villa
-0
-100
-0
-10
-1
-NIL
-HORIZONTAL
-
-SLIDER
-756
-284
-957
-317
-density-zone-industriel
-density-zone-industriel
-0
-10
-2
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-727
-78
-913
-111
-density-zone-bureau
-density-zone-bureau
-0
-10
-0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-914
-77
-1120
-110
-density-zone-commerce
-density-zone-commerce
-0
-10
 5
 1
 1
 NIL
 HORIZONTAL
 
-INPUTBOX
-740
-111
-895
-171
-radius-bureau
-3
-1
-0
-Number
-
-INPUTBOX
-935
-110
-1090
-170
-radius-commerce
-5
-1
-0
-Number
-
-INPUTBOX
-757
-317
-912
-377
-radius-industriel
-5
-1
-0
-Number
-
 SLIDER
-908
-171
-1152
-204
-approvisionnement-commerce
-approvisionnement-commerce
+28
+176
+233
+209
+white-industry-wanted
+white-industry-wanted
 0
 10
-1
+0
 1
 1
 NIL
