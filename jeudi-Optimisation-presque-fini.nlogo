@@ -214,7 +214,7 @@ number-red-resident
 number-red-resident
 0
 1000
-500
+610
 10
 1
 NIL
@@ -275,7 +275,7 @@ INPUTBOX
 343
 170
 radius-resident
-4
+3
 1
 0
 Number
@@ -306,7 +306,7 @@ number-yellow-activity
 number-yellow-activity
 0
 200
-50
+200
 10
 1
 NIL
@@ -321,7 +321,7 @@ number-white-industry
 number-white-industry
 0
 100
-10
+20
 1
 1
 NIL
@@ -351,7 +351,7 @@ industry-wants-industry
 industry-wants-industry
 0
 10
-2
+0
 1
 1
 NIL
@@ -403,7 +403,7 @@ industry-accepts-resident
 industry-accepts-resident
 0
 10
-0
+2
 1
 1
 NIL
