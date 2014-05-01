@@ -1,27 +1,18 @@
 globals [
   percent-similar  ;; on the average, what percent of a turtle's neighbors
                    ;; are the same color as that turtle?
-<<<<<<< HEAD
-  percent-unhappy  ;; what percent of the turtles are unhappy?
-=======
   percent-happy  ;; what percent of the turtles are unhappy?
->>>>>>> fd263c15473f94604e3a5e09c93a1c0cb79d2fa4
 ]
 
 turtles-own [
   happy?       ;; for each turtle, indicates whether at least %-similar-wanted percent of
                ;; that turtles' neighbors are the same color as the turtle
   similar-nearby   ;; how many neighboring patches have a turtle with my color?
-  green-nearby ;; how many have a turtle of another color?
+                   ;; how many have a turtle of another color?
   yellow-nearby
   white-nearby
-<<<<<<< HEAD
-  total-nearby  ;; sum of previous two variables
-  money
-=======
   red-nearby
   total-nearby  ;; sum of previous two variables
->>>>>>> fd263c15473f94604e3a5e09c93a1c0cb79d2fa4
 ]
 
 to setup
@@ -33,31 +24,13 @@ to setup
   ;; create turtles on random patches.
   ask n-of number-resident patches
     [ sprout 1
-<<<<<<< HEAD
-      [ set color red 
-        set money random 0 100] ]
-=======
       [ set color red ] ]
-    
-    ask n-of number-villa patches
-  [sprout 1
-  [set color orange] ]
   
->>>>>>> fd263c15473f94604e3a5e09c93a1c0cb79d2fa4
-  ask n-of number-bureau patches
-  [sprout 1
-  [set color green] ]
-  
-   ask n-of number-commerce patches
+   ask n-of number-activity patches
   [sprout 1
   [set color yellow] ]
-<<<<<<< HEAD
-  
-   ask n-of number-industry patches
-=======
 
   ask n-of number-industrie patches
->>>>>>> fd263c15473f94604e3a5e09c93a1c0cb79d2fa4
   [sprout 1
   [set color white] ]
   
@@ -67,11 +40,7 @@ to setup
 end
 
 to go
-<<<<<<< HEAD
-  if percent-unhappy = 0  [ stop ]
-=======
   if percent-happy = 100  [ stop ]
->>>>>>> fd263c15473f94604e3a5e09c93a1c0cb79d2fa4
   move-unhappy-turtles
   update-variables
   tick
@@ -86,28 +55,10 @@ to find-new-spot
   rt random-float 360
   fd random-float 10
   if any? other turtles-here
-<<<<<<< HEAD
-    [ ifelse any? turtles-here with [money > [money] of myself] [
-        kick-out
-       ]
-      [find-new-spot]
-       ]          ;; keep going until we find an unoccupied patch
-  move-to patch-here  ;; move to center of patch
-end
-
-to kick-out
-  ask turtles-here [
-    find-new-spot
-    ]
-  move-to patch-here
-end
-
-=======
     [ find-new-spot ]          ;; keep going until we find an unoccupied patch
   move-to patch-here  ;; move to center of patch
 end
 
->>>>>>> fd263c15473f94604e3a5e09c93a1c0cb79d2fa4
 to update-variables
   update-turtles
   update-globals
@@ -119,59 +70,14 @@ to update-turtles
     ;; surrounding the current patch
     set similar-nearby count (turtles in-radius radius)
       with [color = [color] of myself]
-    set green-nearby count (turtles in-radius radius)
-      with [color = green]
       set yellow-nearby count (turtles in-radius radius)
       with [color = yellow]
       set white-nearby count (turtles in-radius radius)
       with [color = white]
-<<<<<<< HEAD
-    set total-nearby green-nearby + yellow-nearby + white-nearby + similar-nearby
-    set happy? yellow-nearby >= (yellow-commerce-wanted) and green-nearby >= (green-bureau-wanted) and white-nearby <= white-industry-wanted
+    set total-nearby   yellow-nearby + similar-nearby + white-nearby
+    set happy? yellow-nearby >= (yellow-activity-wanted )  and white-nearby <= (white-industrie-wanted)
   ]
-  
-   ask turtles with [color = yellow] [
-    ;; in next two lines, we use "neighbors" to test the eight patches
-    ;; surrounding the current patch
-    set white-nearby count (turtles in-radius 5)
-      with [color = white]
-      set happy? white-nearby >= 1
-   ]
-   
-    ask turtles with [color = green] [
-    ;; in next two lines, we use "neighbors" to test the eight patches
-    ;; surrounding the current patch
-    set white-nearby count (turtles in-radius 3)
-      with [color = white]
-      set happy? white-nearby <= 0
-   ]
-     ask turtles with [color = white] [
-    ;; in next two lines, we use "neighbors" to test the eight patches
-    ;; surrounding the current patch
-    set similar-nearby count (turtles in-radius 3)
-      with [color = [color] of myself]
-      set happy? similar-nearby >= 3
-   ]
-=======
-    set total-nearby green-nearby + yellow-nearby + similar-nearby
-    set happy? yellow-nearby >= (yellow-commerce-wanted ) and green-nearby >= (green-bureau-wanted ) ;;and white-nearby <= (white-industrie-wanted)
-  ]
-    
-     ask turtles with [color = orange] [
-    ;; in next two lines, we use "neighbors" to test the eight patches
-    ;; surrounding the current patch
-    set similar-nearby count (turtles in-radius radius)
-      with [color = [color] of myself]
-    set green-nearby count (turtles in-radius radius)
-      with [color = green]
-      set yellow-nearby count (turtles in-radius radius)
-      with [color = yellow]
-      set white-nearby count (turtles in-radius radius)
-      with [color = white]
-    set total-nearby green-nearby + yellow-nearby + similar-nearby
-    set happy? yellow-nearby >= (yellow-commerce-wanted * 2 ) and green-nearby >= (green-bureau-wanted * 2 ) and white-nearby <= (white-industrie-wanted * 2)
-  ]
-     
+        
      ask turtles with [color = white] [
        
        set similar-nearby count (turtles in-radius radius-industriel)
@@ -182,55 +88,37 @@ to update-turtles
       
     set happy? similar-nearby >= (density-zone-industriel) and red-resident-wanted >= ( red-nearby )
   ]
-     
-     
-          ask turtles with [color = green] [
-            
-            set similar-nearby count (turtles in-radius radius-bureau)
-      with [color = [color] of myself]  
-    set happy? similar-nearby >= (density-zone-bureau) 
-  ]
-      
-      
+          
        ask turtles with [color = yellow] [
          
-         set similar-nearby count (turtles in-radius radius-commerce)
+         set similar-nearby count (turtles in-radius radius-activity)
       with [color = [color] of myself]   
       
-      set white-nearby count (turtles in-radius radius-commerce)
+      set white-nearby count (turtles in-radius radius-activity)
       with [color = white]
-      set red-nearby count (turtles in-radius radius-commerce)
+      set red-nearby count (turtles in-radius radius-activity)
       with [color = red]
       
-    set happy? similar-nearby >= (density-zone-commerce) and white-nearby >= ( approvisionnement-commerce ) and red-nearby >= ( red-resident-desired ) 
+    set happy? white-nearby >= ( approvisionnement-activity ) and red-nearby >= ( red-resident-desired ) 
   ]
                
->>>>>>> fd263c15473f94604e3a5e09c93a1c0cb79d2fa4
 end
 
 to update-globals
   let similar-neighbors sum [similar-nearby] of turtles
   let total-neighbors sum [total-nearby] of turtles
   set percent-similar (similar-neighbors / total-neighbors) * 100
-<<<<<<< HEAD
-  set percent-unhappy (count turtles with [happy? = FALSE]) / (count turtles) * 100
-=======
   set percent-happy (count turtles with [happy? = TRUE]) / (count turtles) * 100
->>>>>>> fd263c15473f94604e3a5e09c93a1c0cb79d2fa4
 end
-
-
-; Copyright 1997 Uri Wilensky.
-; See Info tab for full copyright and license.
 @#$#@#$#@
 GRAPHICS-WINDOW
 354
 10
-721
-398
+894
+571
 25
 25
-7.0
+10.4
 1
 10
 1
@@ -255,13 +143,8 @@ MONITOR
 491
 343
 536
-<<<<<<< HEAD
-% unhappy
-percent-unhappy
-=======
 % happy
 percent-happy
->>>>>>> fd263c15473f94604e3a5e09c93a1c0cb79d2fa4
 1
 1
 11
@@ -300,11 +183,7 @@ PLOT
 444
 250
 587
-<<<<<<< HEAD
-Percent Unhappy
-=======
 Percent happy
->>>>>>> fd263c15473f94604e3a5e09c93a1c0cb79d2fa4
 time
 %
 0.0
@@ -315,15 +194,6 @@ true
 false
 "" ""
 PENS
-<<<<<<< HEAD
-"percent" 1.0 0 -10899396 true "" "plot percent-unhappy"
-
-SLIDER
-19
-22
-231
-55
-=======
 "percent" 1.0 0 -10899396 true "" "plot percent-happy"
 
 SLIDER
@@ -331,59 +201,36 @@ SLIDER
 48
 243
 81
->>>>>>> fd263c15473f94604e3a5e09c93a1c0cb79d2fa4
 number-resident
 number-resident
 0
 1000
-<<<<<<< HEAD
-1000
-=======
-250
->>>>>>> fd263c15473f94604e3a5e09c93a1c0cb79d2fa4
+200
 10
 1
 NIL
 HORIZONTAL
 
 SLIDER
-<<<<<<< HEAD
-19
-95
-246
-128
-=======
-29
-147
-241
-180
->>>>>>> fd263c15473f94604e3a5e09c93a1c0cb79d2fa4
-yellow-commerce-wanted
-yellow-commerce-wanted
+31
+78
+243
+111
+yellow-activity-wanted
+yellow-activity-wanted
 0
 10
-<<<<<<< HEAD
-0
-=======
 3
->>>>>>> fd263c15473f94604e3a5e09c93a1c0cb79d2fa4
 1
 1
 NIL
 HORIZONTAL
 
 BUTTON
-<<<<<<< HEAD
-48
-58
-128
-91
-=======
 32
 10
 112
 43
->>>>>>> fd263c15473f94604e3a5e09c93a1c0cb79d2fa4
 setup
 setup
 NIL
@@ -397,17 +244,10 @@ NIL
 1
 
 BUTTON
-<<<<<<< HEAD
-129
-58
-209
-91
-=======
 113
 10
 193
 43
->>>>>>> fd263c15473f94604e3a5e09c93a1c0cb79d2fa4
 go
 go
 T
@@ -420,59 +260,22 @@ NIL
 NIL
 1
 
-SLIDER
-739
-44
-911
-77
-number-bureau
-number-bureau
-0
-<<<<<<< HEAD
-100
-53
-1
-=======
-200
-0
-10
->>>>>>> fd263c15473f94604e3a5e09c93a1c0cb79d2fa4
-1
-NIL
-HORIZONTAL
-
 INPUTBOX
-<<<<<<< HEAD
-742
-136
-1011
-196
-radius
-6
-=======
-18
-236
-287
-296
+261
+52
+312
+112
 radius
 3
->>>>>>> fd263c15473f94604e3a5e09c93a1c0cb79d2fa4
 1
 0
 Number
 
 BUTTON
-<<<<<<< HEAD
-210
-58
-273
-91
-=======
 194
 10
 257
 43
->>>>>>> fd263c15473f94604e3a5e09c93a1c0cb79d2fa4
 NIL
 go
 NIL
@@ -490,81 +293,26 @@ SLIDER
 44
 1083
 77
-number-commerce
-number-commerce
+number-activity
+number-activity
 0
-<<<<<<< HEAD
-100
-69
-1
-=======
 200
 100
 10
->>>>>>> fd263c15473f94604e3a5e09c93a1c0cb79d2fa4
 1
 NIL
 HORIZONTAL
 
 SLIDER
-<<<<<<< HEAD
-19
-133
-223
-166
-=======
-30
-114
-212
-147
->>>>>>> fd263c15473f94604e3a5e09c93a1c0cb79d2fa4
-green-bureau-wanted
-green-bureau-wanted
-0
-10
-0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-<<<<<<< HEAD
-751
-87
-925
-120
-number-industry
-number-industry
-0
-100
-5
-1
-=======
-756
-251
-928
-284
+914
+281
+1086
+314
 number-industrie
 number-industrie
 0
 100
-24
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-30
-180
-220
-213
-white-industrie-wanted
-white-industrie-wanted
-0
 10
-0
 1
 1
 NIL
@@ -572,41 +320,11 @@ HORIZONTAL
 
 SLIDER
 32
-80
-204
-113
-number-villa
-number-villa
-0
-100
-0
-10
-1
-NIL
-HORIZONTAL
-
-SLIDER
-756
-284
-957
-317
-density-zone-industriel
-density-zone-industriel
-0
-10
-2
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-727
-78
-913
 111
-density-zone-bureau
-density-zone-bureau
+222
+144
+white-industrie-wanted
+white-industrie-wanted
 0
 10
 0
@@ -617,84 +335,63 @@ HORIZONTAL
 
 SLIDER
 914
-77
-1120
-110
-density-zone-commerce
-density-zone-commerce
+314
+1086
+347
+density-zone-industriel
+density-zone-industriel
 0
 10
-3
+0
 1
 1
 NIL
 HORIZONTAL
 
 INPUTBOX
-740
-111
-895
-171
-radius-bureau
+942
+142
+1049
+202
+radius-activity
 3
 1
 0
 Number
 
 INPUTBOX
-935
-110
-1090
-170
-radius-commerce
-3
-1
-0
-Number
-
-INPUTBOX
-757
-317
-912
-377
+945
+382
+1056
+442
 radius-industriel
-5
+3
 1
 0
 Number
 
 SLIDER
-908
-171
-1152
-204
-approvisionnement-commerce
-approvisionnement-commerce
+911
+79
+1127
+112
+approvisionnement-activity
+approvisionnement-activity
 0
 10
 0
 1
->>>>>>> fd263c15473f94604e3a5e09c93a1c0cb79d2fa4
 1
 NIL
 HORIZONTAL
 
 SLIDER
-<<<<<<< HEAD
-28
-176
-233
-209
-white-industry-wanted
-white-industry-wanted
-=======
-757
-378
-939
-411
+913
+348
+1088
+381
 red-resident-wanted
 red-resident-wanted
->>>>>>> fd263c15473f94604e3a5e09c93a1c0cb79d2fa4
 0
 10
 0
@@ -703,24 +400,21 @@ red-resident-wanted
 NIL
 HORIZONTAL
 
-<<<<<<< HEAD
-=======
 SLIDER
-933
-205
-1118
-238
+912
+111
+1087
+144
 red-resident-desired
 red-resident-desired
 0
 10
-3
+4
 1
 1
 NIL
 HORIZONTAL
 
->>>>>>> fd263c15473f94604e3a5e09c93a1c0cb79d2fa4
 @#$#@#$#@
 ## WHAT IS IT?
 
@@ -1077,6 +771,24 @@ NetLogo 5.0.5
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
+<experiments>
+  <experiment name="experiment" repetitions="1" runMetricsEveryStep="true">
+    <setup>setup</setup>
+    <go>go</go>
+    <timeLimit steps="300"/>
+    <metric>percent-happy</metric>
+    <enumeratedValueSet variable="radius">
+      <value value="0"/>
+      <value value="1"/>
+      <value value="3"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="radius-commerce">
+      <value value="0"/>
+      <value value="1"/>
+      <value value="3"/>
+    </enumeratedValueSet>
+  </experiment>
+</experiments>
 @#$#@#$#@
 @#$#@#$#@
 default
