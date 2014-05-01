@@ -55,7 +55,7 @@ end
 
 to find-new-spot
   rt random-float 360
-  fd random-float 10
+  fd random-float 30
   if any? other turtles-here
     [ find-new-spot ]          ;; keep going until we find an unoccupied patch
   move-to patch-here  ;; move to center of patch
@@ -275,7 +275,7 @@ INPUTBOX
 343
 170
 radius-resident
-3
+6
 1
 0
 Number
@@ -363,7 +363,7 @@ INPUTBOX
 343
 320
 radius-activity
-4
+6
 1
 0
 Number
@@ -374,7 +374,7 @@ INPUTBOX
 345
 466
 radius-industry
-3
+4
 1
 0
 Number
@@ -785,17 +785,31 @@ NetLogo 5.0.5
     <setup>setup</setup>
     <go>go</go>
     <timeLimit steps="300"/>
-    <metric>percent-happy</metric>
-    <enumeratedValueSet variable="radius">
+    <metric>count percent-happy</metric>
+    <enumeratedValueSet variable="radius-industry">
       <value value="0"/>
       <value value="1"/>
-      <value value="3"/>
+      <value value="10"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="radius-commerce">
+    <enumeratedValueSet variable="radius-activity">
       <value value="0"/>
       <value value="1"/>
-      <value value="3"/>
+      <value value="10"/>
     </enumeratedValueSet>
+    <enumeratedValueSet variable="radius-resident">
+      <value value="0"/>
+      <value value="1"/>
+      <value value="10"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="experiment" repetitions="1" runMetricsEveryStep="true">
+    <setup>setup</setup>
+    <go>go</go>
+    <timeLimit steps="300"/>
+    <metric>percent-density</metric>
+    <steppedValueSet variable="radius-industry" first="0" step="2" last="6"/>
+    <steppedValueSet variable="radius-activity" first="0" step="2" last="6"/>
+    <steppedValueSet variable="radius-resident" first="0" step="2" last="6"/>
   </experiment>
 </experiments>
 @#$#@#$#@
