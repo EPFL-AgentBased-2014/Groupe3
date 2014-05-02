@@ -31,55 +31,49 @@
         <h1>
 <a name="introduction" class="anchor" href="#introduction"><span class="octicon octicon-link"></span></a>Introduction</h1>
 
-<p>Depuis de nombreuses années, les distances de trajet par personne augmente. On se deplace de plus en plus loin pour se rendre au travail et pour faire les achats. Les dernères années on constate un retournement, de plus en plus des gens ont envie d'avoir des choses à proximité. Mais comment pourait-on structuré une ville pour gérer la vie quotidienne sans faire des grands déplacements?</p>
+<p>Les distances de trajet sont une problématique actuelle. De nos jours, des plans sectoriels sont créés pour minimiser les déplacements et favoriser les interactions entre les différents constituants d'une ville.</p>
 
 <h1>
-<a name="objectifs" class="anchor" href="#objectifs"><span class="octicon octicon-link"></span></a>Objectifs</h1>
+<a name="objectifs-et-hypoth%C3%A8ses" class="anchor" href="#objectifs-et-hypoth%C3%A8ses"><span class="octicon octicon-link"></span></a>Objectifs et hypothèses</h1>
 
-<p>A travers un modèle viable, nous voulons analyser les organisations spatiales entre trois differentes composants tels que les habitations, les lieux d'activités et l'industrie. Cette analyse devra permettre de mieux comprendre les interactions entre différents paramètres au sein d'une ville en fonction de leur éloignement respectif.</p>
+<p>A travers un modèle viable, nous voulons analyser les organisations spatiales entre différents composants structurels d'une ville. Cette analyse devra permettre de mieux comprendre les interactions entre différents paramètres au sein d'une ville en fonction de leur éloignement respectif.</p>
 
-<h1>
-<a name="hypoth%C3%A8ses" class="anchor" href="#hypoth%C3%A8ses"><span class="octicon octicon-link"></span></a>hypothèses</h1>
-
-<p>On pense que avec les differentes intérets au sein d'une ville on devra trouver une grande mixité entre les différentes agents. Pour notre cas on attend a avoir une trés grande mixité entre les habitants et les activités, par contre il serait interessant de voir le q'est-ce qui ce passe avec l'industrie modifiant les paramètres. </p>
+<p>Nous pensons qu'avec quelques composants types et diverses exigences, nous pouvons recréer des cas analogues à des structures actuelles. </p>
 
 <h1>
 <a name="m%C3%A9thodes-et-proc%C3%A9dures" class="anchor" href="#m%C3%A9thodes-et-proc%C3%A9dures"><span class="octicon octicon-link"></span></a>Méthodes et procédures</h1>
 
-<p><strong>Premère pas</strong></p>
+<p><strong>Premier pas</strong></p>
 
 <p>Pour ce faire, nous avons définis des unités représentant des éléments structurels types d'une ville. 
 Ainsi, une cellule rouge représente une unité d'habitation type, une cellule jaune, une unité d'activité et une cellule inactive, le vide actif.</p>
 
-<p>Nous avons émis la condition qu'une cellule d'habitation doit avoir dans un rayon donné r1 un nombre d'activités X pour être stable. Si la condition n'est pas satisfaite, le processus est réitéré jusqu'à ce que la condition soit satisfaite.
-Par chaque itération les cellules insatisfaite se déplace aléatoirement dans sur le plan.</p>
+<p>Nous avons émis la condition qu'une cellule d'habitation doit avoir dans un rayon donné r un nombre d'activités X pour être stable. Si la condition n'est pas satisfaite, le processus est réitéré jusqu'à ce que la condition soit satisfaite.</p>
 
 <p>Divers inputs et sliders permettent de faire varier les paramètres tels que le nombre d'unités avec leur appropriations respectives, le niveau d'exigence des unités et le rayon d'affectation.
-<img src="https://raw.githubusercontent.com/EPFL-AgentBased-2014/Groupe3/master/Processus/org1.png" alt=""></p>
-
-<p>Nous constatons que si le rayon est de 1 cellule, il y a une concentration qui se fait. Tandis que si le rayon est plus élevé (3), une hétérogénéité se crée.
-<img src="https://raw.githubusercontent.com/EPFL-AgentBased-2014/Groupe3/master/Processus/Mardi-Optimisation-1.png" alt=""></p>
-
-<p><strong>suite</strong></p>
+<img src="https://raw.githubusercontent.com/EPFL-AgentBased-2014/Groupe3/master/Processus/org1.png" alt="">
+Nous constatons que si le rayon est de 1 cellule, il y a une concentration qui se fait. Tandis que si le rayon est plus élevé (3), une hétérogénéité se crée.
+<img src="https://raw.githubusercontent.com/EPFL-AgentBased-2014/Groupe3/master/Processus/Mardi-Optimisation-1.png" alt=""><strong>Deuxième pas</strong></p>
 
 <p>A partir de cette première conclusion, nous avons décidé d'intégrer une troisième cellule unité représentant une industrie.
 Cette troisième cellule permet de créer une nouvelle condition qui vient perturber le système.
-Ainsi, la cellule d'industrie doit être à une distance r2 des habitations pour pouvoir être stable. Si la condition n'est pas satisfaite, le processus est réitéré jusqu'à ce que la condition soit satisfaite.
-De plus, nous avons émis l'hypothèse que 1 unité d'activité doit avoir un nombre Y d'habitants et Z d'industries pour pouvoir être stable.</p>
+Ainsi, une cellule d'habitation doit avoir dans un rayon r1, un nombre d'activités Y et aucune industrie pour être stable. A l'inverse, une industrie doit avoir dans un rayon r2 un nombre d'activités Y aucune habitations.
+Si les conditions ne sont pas satisfaites, le processus est réitéré jusqu'à ce que la condition soit satisfaite.
+<img src="https://raw.githubusercontent.com/EPFL-AgentBased-2014/Groupe3/master/Processus/Final/codeb.png" alt="">
+Nous constatons ici qu'à travers ces nouveaux paramètres nous arrivons à la formation de pôles autour desquels gravitent les commerces et habitations.
+Si le rayon r2 de l'éloignement des industries par rapport aux habitations est faible, nous obtenons une structure similaire au modèle de Johann Heinrich von Thünen. Cette structure montre que des industries peuvent prendre un rôle essentiel dans la structure de certaines villes pour autant que les nuisances soient tolérées. </p>
 
-<p>Nous constatons ici qu'à travers ces nouveaux paramètres nous arrivons à la formation de pôles autour desquels gravitent les commerces et habitations.
-Si le rayon r2 de l'éloignement des industries par rapport aux habitations est faible, nous obtenons une structure similaire à un processus top-down que l'on peut trouver dans certains villages où l'industrie tertiaire à un rôle primordial au niveau de l'organisation structurelle.
-Au contraire, si l'exigence d'éloignement des industries par rapport aux habitations est élevée, les industries repoussent les unités d'habitations et nous avons une formations plus hétérogène, sans centralités.
+<p>Au contraire, si l'exigence d'éloignement des industries par rapport aux habitations est élevée, les industries repoussent les unités d'habitations et nous avons une formations plus hétérogène, dépourvues de centralisés.
 <img src="https://raw.githubusercontent.com/EPFL-AgentBased-2014/Groupe3/master/Processus/Mardi-Optimisation%20view8.png" alt="">
-Toutefois de nos jours, nous tendons à avoir une plus grande mixité entre habitations et activités. C'est pourquoi nous avons décidé de rajouter une troisième condition où les commerces doivent avoir un nombre x d'habitants dans un rayon r3 pour pouvoir être stable.
-Ainsi, il n'y a plus de ségrégations entre habitations et commerces et nous obtenons ainsi une plus grande mixité sociale.</p>
-
-<p>Nous pouvons constater que plus le rayon d'affectation est faible, plus nous tendons à avoir une multitude de pôles d'attractions ayant pour centre une activité. Nous obtenons avec ce type de structure, un déplacement minime des habitants vers les commerces.
+Toutefois de nos jours, nous tendons à avoir une plus grande mixité entre habitations et activités. C'est pourquoi nous avons décidé de rajouter une troisième condition où les commerces doivent avoir un nombre x d'habitants et un nombre Z d'industries dans un rayon r3 pour pouvoir être stable.
+Ainsi, il n'y a plus de ségrégations entre habitations et commerces et nous obtenons donc une plus grande mixité sociale.
+<img src="https://raw.githubusercontent.com/EPFL-AgentBased-2014/Groupe3/master/Processus/Final/code3.png" alt="">
+Nous pouvons constater que plus le rayon d'affectation est faible, plus nous tendons à avoir une multitude de pôles d'attractions ayant pour centre une activité. Nous obtenons avec ce type de structure, un déplacement minime des habitants vers les commerces.
 Au contraire, si le rayon est élevé, une réelle mixité se crée entre habitations et commerces créant ainsi un tissage pouvant correspondre à une ville recherchant une mixité de fonctions. Toutefois, ces grands tissages impliquent un déplacement plus élevé des habitants vers les commerces.
 <img src="https://raw.githubusercontent.com/EPFL-AgentBased-2014/Groupe3/master/Processus/Final/Mardi1-.png" alt="">
-Toutefois, peut-être que dans un avenir proche nous pourrions avoir des industries propres en complète harmonie avec le tissu urbain. Ainsi, il n'y aurait plus de phénomène de répulsion entre habitations et industries.</p>
+Cependant, dans un avenir proche, nous pourrions avoir des industries propres en complète harmonie avec le tissu urbain. Ainsi, il n'y aurait plus de phénomène de répulsion entre habitations et industries.</p>
 
-<p>A nouveau, si le rayon d'affectation est faible, nous aurions une multitude de pôles ayant comme noyau les industries et les commerces. Au contraire, avec un rayon d'affectation plus élevé, nous avons une hétérogénéité totale avec une mixité entre habitations, commerces et industries.
+<p>A nouveau, si le rayon d'affectation est faible, nous avons une multitude de pôles ayant comme noyau cette fois-ci les industries et les commerces. Au contraire, avec un rayon d'affectation plus élevé, nous avons une hétérogénéité totale avec une mixité complète entre habitations, commerces et industries.
 <img src="https://raw.githubusercontent.com/EPFL-AgentBased-2014/Groupe3/master/Processus/Final/Industrie.png" alt=""><strong>Discussion et conclusion</strong></p>
 
 <p>A travers ce modèle viable, nous pouvons comprendre que le problème n'est pas simple. Nous avons émis l'hypothèse que nous pouvions résumer notre problématique à travers 3 types d'unités et leurs conditions respectives, mais la réalité est bien plus complexe. Divers autres facteurs viennent modifier ces structures tels que des facteurs sociaux, économiques, géographiques, temporels...</p>
