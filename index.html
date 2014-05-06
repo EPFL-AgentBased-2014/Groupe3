@@ -50,7 +50,7 @@ Ainsi, une cellule rouge représente une unité d'habitation type, une cellule j
 
 <p>Nous avons émis la condition qu'une cellule d'habitation doit avoir dans un rayon donné r un nombre d'activités X pour être stable. Si la condition n'est pas satisfaite, le processus est réitéré jusqu'à ce que la condition soit satisfaite.</p>
 
-<p>Divers inputs et sliders permettent de faire varier les paramètres tels que le nombre d'unités avec leur appropriations respectives, le niveau d'exigence des unités et le rayon d'affectation.
+<p>Divers inputs et sliders permettent de faire varier les paramètres tels que le nombre d'unités et leur appropriation respective, le niveau d'exigence des unités et le rayon d'affectation.
 <img src="https://raw.githubusercontent.com/EPFL-AgentBased-2014/Groupe3/master/Processus/org1.png" alt="">
 Nous constatons que si le rayon est de 1 cellule, il y a une concentration qui se fait. Tandis que si le rayon est plus élevé (3), une hétérogénéité se crée.
 <img src="https://raw.githubusercontent.com/EPFL-AgentBased-2014/Groupe3/master/Processus/Mardi-Optimisation-1.png" alt=""><strong>Deuxième pas</strong></p>
@@ -63,7 +63,7 @@ Si les conditions ne sont pas satisfaites, le processus est réitéré jusqu'à 
 Nous constatons ici qu'à travers ces nouveaux paramètres nous arrivons à la formation de pôles autour desquels gravitent les commerces et habitations.
 Si le rayon r2 de l'éloignement des industries par rapport aux habitations est faible, nous obtenons une structure similaire au modèle de Johann Heinrich von Thünen. Cette structure montre que des industries peuvent prendre un rôle essentiel dans la structure de certaines villes pour autant que les nuisances soient tolérées. </p>
 
-<p>Au contraire, si l'exigence d'éloignement des industries par rapport aux habitations est élevée, les industries repoussent les unités d'habitations et nous avons une formations plus hétérogène, dépourvues de centralisés.
+<p>Au contraire, si l'exigence d'éloignement des industries par rapport aux habitations est élevée, les industries repoussent les unités d'habitations et nous avons une formations plus hétérogène, dépourvues de centralités.
 <img src="https://raw.githubusercontent.com/EPFL-AgentBased-2014/Groupe3/master/Processus/Mardi-Optimisation%20view8.png" alt="">
 Toutefois de nos jours, nous tendons à avoir une plus grande mixité entre habitations et activités. C'est pourquoi nous avons décidé de rajouter une troisième condition où les commerces doivent avoir un nombre x d'habitants et un nombre Z d'industries dans un rayon r3 pour pouvoir être stable.
 Ainsi, il n'y a plus de ségrégations entre habitations et commerces et nous obtenons donc une plus grande mixité sociale.
@@ -78,8 +78,13 @@ Cependant, dans un avenir proche, nous pourrions avoir des industries propres en
 A travers le behavior space, nous avons voulu montrer au moyen d'un graphique l'influence du changement de radius des habitations et des commerces.</p>
 
 <p>Nous pouvons constater qu'avec des exigences trop élevées, il est difficile de satisfaire toutes les conditions et une stabilité ne peut pas être trouvée. Au contraire, avec des exigences plus souples, nous avons une structure qui tend vers la stabilité.
-De plus, dû au rapport d'habitations plus élevé que les commerces, le rayon d'influence des habitations primes et la stabilité et fortement influencée par les conditions de celles-ci.
-<img src="https://raw.githubusercontent.com/EPFL-AgentBased-2014/Groupe3/master/Processus/Final/code2.png" alt=""><strong>Discussion et conclusion</strong></p>
+De plus, dû au rapport d'habitations plus élevé que les commerces, le rayon d'influence des habitations primes et la stabilité est fortement influencée par les conditions de celles-ci.
+<img src="https://raw.githubusercontent.com/EPFL-AgentBased-2014/Groupe3/master/Processus/Final/code2.png" alt="">
+Nous pouvons voir que les structures trouvées auparavant ont un degré de ségrégation et de compacité qui peut fortement évoluer en fonction de nos exigences.</p>
+
+<p>Ci-dessous, nous retrouvons la ville similaire au modèle de Johann Heinrich von Thünen, la ville du futur avec une mixité complète. Les tableaux nous indiquent leur taux de ségrégation, compacité et satisfaction respectifs.</p>
+
+<p><strong>Discussion et conclusion</strong></p>
 
 <p>A travers ce modèle fonctionnel, nous pouvons comprendre que le problème n'est pas simple. Nous avons émis l'hypothèse que nous pouvions résumer notre problématique à travers 3 types d'unités et leurs conditions respectives, mais la réalité est bien plus complexe. Divers autres facteurs viennent modifier ces structures tels que des facteurs sociaux, économiques, géographiques, temporels...</p>
 
